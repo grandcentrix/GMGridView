@@ -1151,7 +1151,19 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         }
     }
     else
-    { 
+    {
+        for (UIView *subview in self.subviews) {
+            if (![subview isKindOfClass:[GMGridViewCell class]]) {
+                continue;
+            }
+            
+            UIView *contentView = ((GMGridViewCell *)subview).contentView;
+            UIView *hitTestView = [contentView hitTest:locationTouch withEvent:nil];
+            if (hitTestView && ![hitTestView isKindOfClass:[self class]]) {
+                return;
+            }
+        }
+        
         if([self.actionDelegate respondsToSelector:@selector(GMGridViewDidTapOnEmptySpace:)])
         {
             [self.actionDelegate GMGridViewDidTapOnEmptySpace:self];
